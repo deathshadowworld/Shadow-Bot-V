@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.utils import get
-import posttest
+import os
 
 
 intents = discord.Intents(messages=True, guilds=True, members=True, voice_states=True)
@@ -18,7 +18,7 @@ vc_role = ""
 
 @client.event
 async def on_ready():
-    posttest.run()
+    #posttest.run()
     await client.change_presence(activity=discord.Game(name="Shadow Bot V"))
     print('We have logged in as {0.user}'.format(client))
 
@@ -63,6 +63,5 @@ async def on_voice_state_update(member, before, after):
 
 
 
-v = 'OTkyNzc1OTQxMzA4ODI5Njk2.GqIRpV.OdNYMoMTMdKCPH6kI74hVOsItDkSutcL1q0kQ0'
-iv = 'OTE4MDQ2NDU4NzQwMTEzNDA4.YbBjZA.NLdM-4bUzEMWg0kK6URSZNTUJBI'
-client.run(iv)
+
+client.run(os.environ.get('IV'))
