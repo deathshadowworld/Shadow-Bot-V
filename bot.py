@@ -13,7 +13,7 @@ workch_id = 861326204132392960
 workch = client.get_channel(workch_id)
 vc_role = ""
 
-
+posttest.run()
 
 
 @client.event
