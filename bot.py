@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.utils import get
+import posttest
 
 
 intents = discord.Intents(messages=True, guilds=True, members=True, voice_states=True)
@@ -61,6 +62,6 @@ async def on_voice_state_update(member, before, after):
 
 
 
-
-
-client.run('OTkyNzc1OTQxMzA4ODI5Njk2.GqIRpV.OdNYMoMTMdKCPH6kI74hVOsItDkSutcL1q0kQ0')
+v = 'OTkyNzc1OTQxMzA4ODI5Njk2.GqIRpV.OdNYMoMTMdKCPH6kI74hVOsItDkSutcL1q0kQ0'
+iv = 'OTE4MDQ2NDU4NzQwMTEzNDA4.YbBjZA.NLdM-4bUzEMWg0kK6URSZNTUJBI'
+client.run(iv)
