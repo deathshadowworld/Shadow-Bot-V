@@ -1,7 +1,7 @@
 import psycopg2,os
 'postgresql-encircled-78418'
 def run():
-    DATABASE_URL = os.environ.get('DATABASE_URL')
+    DATABASE_URL = $(heroku config:get DATABASE_URL -a your-app) worker
     con = psycopg2.connect(DATABASE_URL)
     cur = con.cursor()
 
