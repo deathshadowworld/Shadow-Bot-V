@@ -52,5 +52,5 @@ def run():
 
 
 
-    cur.commit()
+    con.commit()
     cur.close()
