@@ -1,7 +1,7 @@
 import psycopg2,os
 
 def run():
-    DATABASE_URL = os.environ['postgresql-encircled-78418']
+    DATABASE_URL = os.environ['DATABASE_URL']
 
     con = psycopg2.connect(DATABASE_URL)
 
