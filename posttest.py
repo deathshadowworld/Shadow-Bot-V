@@ -1,12 +1,9 @@
 import psycopg2,os
 
 def run():
-    DATABASE_URL = os.environ.get('postgresql-encircled-78418')
+    DATABASE_URL = os.environ['postgresql-encircled-78418']
 
-    con = psycopg2.connect(
-    host=DATABASE_URL,
-    user="postgres",
-    password="postgres")
+    con = psycopg2.connect(DATABASE_URL)
 
     cur = con.cursor()
 
