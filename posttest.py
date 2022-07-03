@@ -7,11 +7,9 @@ def run():
     con = psycopg2.connect(DATABASE_URL)
     cur = con.cursor()
 
-
-    cur.execute('CREATE DATABASE shadowVgame;')
     cur.execute('''CREATE TABLE PLAYER(
         ID          INT             NOT NULL,
-
+        PRIMARY KEY (ID),
     );
     ''')
     cur.execute('''CREATE TABLE CHARACTER(
