@@ -30,13 +30,6 @@ def run():
         FOREIGN KEY (PLAYERID) REFERENCES PLAYER(ID)
         );
     ''')
-    cur.execute('''CREATE TABLE EQUIPPED(
-        ITEM        INT             NOT NULL,
-        CHARACTER   INT             NOT NULL,
-        FOREIGN KEY (CHARACTER) REFERENCES CHARACTER(ID),
-        FOREIGN KEY (ITEM) REFERENCES INVENTORY(ID)
-    );
-    ''')
     cur.execute('''CREATE TABLE INVENTORY(
         ID          INT             NOT NULL,
         NAME        CHAR(64)        NOT NULL,
@@ -48,8 +41,16 @@ def run():
         FOREIGN KEY (CHARACTER) REFERENCES CHARACTER(ID)
     );
     ''')
+    cur.execute('''CREATE TABLE EQUIPPED(
+        ITEM        INT             NOT NULL,
+        CHARACTER   INT             NOT NULL,
+        FOREIGN KEY (CHARACTER) REFERENCES CHARACTER(ID),
+        FOREIGN KEY (ITEM) REFERENCES INVENTORY(ID)
+    );
+    ''')
+    
 
 
 
-
+    cur.commit()
     cur.close()
