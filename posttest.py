@@ -2,24 +2,9 @@ import psycopg2,os
 'postgresql-encircled-78418'
 def run():
     DATABASE_URL = os.environ.get('DATABASE_URL')
-    data = []
-    strurl = DATABASE_URL.replace('postgres://','')
-    temp1 = strurl.split(':')
-    data.append(temp1[0])
-    temp2 = temp1[1].split("@")
-    data.append(temp2[0])
-    data.append(temp2[1])
-    temp3 = temp1[2].split("/")
-    data.append(temp3[0])
-    data.append(temp3[1])
 
-    con = psycopg2.connect(
-        host=data[2],
-        database=data[4],
-        user=data[0],
-        password=[1],
-        port=data[3],
-    )
+
+    con = psycopg2.connect(DATABASE_URL)
     cur = con.cursor()
 
 
