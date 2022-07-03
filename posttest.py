@@ -1,11 +1,10 @@
 import psycopg2,os
-
+'postgresql-encircled-78418'
 def run():
-    DATABASE_URL = os.environ.get('postgresql-encircled-78418')
-
+    DATABASE_URL = os.environ.get('DATABASE_URL')
     con = psycopg2.connect(DATABASE_URL)
-
     cur = con.cursor()
+
 
     cur.execute('CREATE DATABASE shadowVgame;')
     cur.execute('''CREATE TABLE PLAYER(

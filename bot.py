@@ -13,11 +13,12 @@ workch_id = 861326204132392960
 workch = client.get_channel(workch_id)
 vc_role = ""
 
-posttest.run()
+
 
 
 @client.event
 async def on_ready():
+    posttest.run()
     await client.change_presence(activity=discord.Game(name="Shadow Bot V"))
     print('We have logged in as {0.user}'.format(client))
 
