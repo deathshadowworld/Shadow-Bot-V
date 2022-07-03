@@ -9,7 +9,7 @@ def run():
 
     cur.execute('''CREATE TABLE PLAYER(
         ID          INT             NOT NULL,
-        PRIMARY KEY (ID),
+        PRIMARY KEY (ID)
     );
     ''')
     cur.execute('''CREATE TABLE CHARACTER(
@@ -27,14 +27,14 @@ def run():
         PLAYERID    INT             NOT NULL,
         IMAGE       TEXT,
         PRIMARY KEY (ID),
-        FOREIGN KEY (PLAYERID) REFERENCES PLAYER(ID),
+        FOREIGN KEY (PLAYERID) REFERENCES PLAYER(ID)
         );
     ''')
     cur.execute('''CREATE TABLE EQUIPPED(
         ITEM        INT             NOT NULL,
         CHARACTER   INT             NOT NULL,
         FOREIGN KEY (CHARACTER) REFERENCES CHARACTER(ID),
-        FOREIGN KEY (ITEM) REFERENCES INVENTORY(ID),
+        FOREIGN KEY (ITEM) REFERENCES INVENTORY(ID)
     );
     ''')
     cur.execute('''CREATE TABLE INVENTORY(
@@ -45,7 +45,7 @@ def run():
         TEXT        CHAR(512)       NOT NULL,
         CHARACTER   INT             NOT NULL,
         PRIMARY KEY (ID),
-        FOREIGN KEY (CHARACTER) REFERENCES CHARACTER(ID),
+        FOREIGN KEY (CHARACTER) REFERENCES CHARACTER(ID)
     );
     ''')
 
