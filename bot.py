@@ -1,67 +1,133 @@
 import discord
 from discord.ext import commands
+from discord.ext.commands import Context
+from discord import Interaction,Button
 from discord.utils import get
-import os
-
+import os,psycopg2, postg
+from dotenv import load_dotenv
 
 intents = discord.Intents(messages=True, guilds=True, members=True, voice_states=True)
 client = discord.Client(intents=intents)
-me = '259999538666930177'
-bona = '400781611588911116'
-vcrole_id = 992826737362739282
-workch_id = 861326204132392960
-workch = client.get_channel(workch_id)
-vc_role = ""
+load_dotenv()
+owner = 259999538666930177
 
 
+class Bot(commands.Bot):
+    def __init__(self):
+        intents = discord.Intents.default()
+        intents.message_content = True
+
+        super().__init__(command_prefix=commands.when_mentioned_or('sk'), intents=intents)
+
+    async def on_ready(self):
+        print(f'Logged in as {self.user} (ID: {self.user.id})')
+        print('------')
+bot = Bot()
 
 
-@client.event
-async def on_ready():
-    #posttest.run()
-    await client.change_presence(activity=discord.Game(name="Shadow Bot V"))
-    print('We have logged in as {0.user}'.format(client))
+class thisButton(discord.ui.View):
+    def __init__(self,uid):
+        super().__init__()
+        self.uid = uid
+        self.value = None
 
-@client.event
+    @discord.ui.button(label='1')
+    async def one(self, interact: Interaction,button: Button):
+        if self.uid == interact.user.id:
+            await interact.response.send_message('1')
+            self.stop()
+        else:
+            await interact.response.send_message("You're not the poster of this.", ephemeral=True)
+
+    @discord.ui.button(label='2')
+    async def two(self, interact: Interaction,button: Button):
+        if self.uid == interact.user.id:
+            await interact.response.send_message('2')
+            self.stop()
+        else:
+            await interact.response.send_message("You're not the expected user.", ephemeral=True)
+
+@bot.command()
+async def start(ctx:Context):
+    view = thisButton(ctx.author.id)
+    await ctx.send('Pick a number.', view=view)
+
+@bot.command()
+async def hello(ctx: Context):
+    if ctx.author.id == owner:
+        await ctx.send('Hello Shadow master!')
+
+@bot.event
 async def on_message(message):
-    user = str(message.author.id)
+    if message.author.id == owner:
+        if message.content == 'hello':
+            await message.channel.send('Hello Shadow!')
+
+    user = message.author
+    user = User(user.name,user.id)
     #print(message.author,': ', message.content, ' -- in --', message.channel)
-    if message.author == client.user:
+    if message.author == bot.user:
         return
 
-    if user == me or user == bona:
+    if user.id == owner:
         if message.content.startswith('hello'):
-            await message.channel.send('Hello '+message.author.name+'!')
+            await message.channel.send('Hello '+user.name+'!')
+    
+    if message.content.startswith('sk '):
+        content = message.content.replace('sk ','')
+        if user.id == owner:
+            if content == "fix":
+                postg.fix()
+                await message.channel.send("fixed i think")
+            if content == "reset":
+                postg.resetAll()
+                await message.channel.send("database reset")
+                
+        if content == "register":
+            if postg.registerUser(user):
+                await message.channel.send('SUCCESS!')
+            else:
+                await message.channel.send('FAILED!')
+        if content == "view profile":
+            profile = postg.viewUser(user)
+            if profile:
+                await message.channel.send('You are <@'+profile['id']+'>, name of '+profile['name']+' with status of '+profile['status'])
+            else:
+                await message.channel.send('not found please register')
+        if content == "view all":
+            userlist = postg.viewUsers()
+            if userlist == []:
+                await message.channel.send("database empty")
+            else:
+                n = ''
+                for x in userlist:
+                    m = "`|     NAME     |        ID        |   STATUS   |`\n"
+                    n = n+"`|  "+x[1]+"  |  "+str(x[0])+"  |  "+x[2]+"  |`\n"
+                m = m+n
+                await message.channel.send(m)
+    await bot.process_commands(message)
 
 
-@client.event
+
+class User:
+    def __init__(self,name='',id='',status='0'):
+        self.name = name
+        self.id = id
+        self.status = status
+
+@bot.event
 async def on_voice_state_update(member, before, after):
-    for guild in client.guilds:
-        if guild.id == 784859857937236059:
-            global vc_role
-            vc_role = get(guild.roles, id=vcrole_id)
-        for x in guild.channels:
-            if x.name == 'work-space':
-                global workch
-                workch = x
+    VCROLE = 992826737362739282
+    GUILD_ID = 784859857937236059
+    #vcr,guid = 993370884683333782,718068370070568990
 
-    #print (workch)
+    guild = bot.get_guild(GUILD_ID)
+    vc_role = get(guild.roles, id=VCROLE)
+
     if  after.channel == None:
-        #print(member.name + ' disconnected.')
-        #await workch.send(member.name + ' disconnected from '+ before.channel.name+'.')
         await member.remove_roles(vc_role)
 
     if before.channel == None:
-        #print(member.name + ' connected.')
-        #await workch.send(member.name + ' connected to '+ after.channel.name+'.')
         await member.add_roles(vc_role)
     
-
-
-
-
-
-
-
-
-client.run(os.environ.get('IV'))
+bot.run(os.environ.get('V'))

@@ -8,7 +8,7 @@ import testmap
 import threading
 
 userDB = sqlite3.connect('test.db')
-
+''''''
 
 
 
@@ -30,13 +30,13 @@ class MyClient(discord.Client):
                 await channel.send ('User registered into the database.')
 
             if (strID == '259999538666930177'):
-                if (content == 'view user'):
+                '''if (content == 'view user'):
                     cursor = userDB.execute("SELECT ID, NAME, STATUS FROM USER")
                     for row in cursor:
                         name = row[1] or 'None'
                         status = row[2] or 'None'
                         data = '`ID = '+str(row[0])+'` **|** `Name = '+name+'` **|** `Status = '+status+'`'
-                        await channel.send (data)
+                        await channel.send (data)'''
                 if (content == 'view character'):
                     cursor = userDB.execute("SELECT ID, NAME, CLASS, PLAYERID FROM CHARACTER")
                     for row in cursor:
@@ -60,13 +60,13 @@ class MyClient(discord.Client):
                         await channel.send ('Status `'+content+'` updated into your profile.')
 
 
-            if (content == 'view profile'):
+            '''if (content == 'view profile'):
                 cursor = userDB.execute("SELECT NAME,STATUS FROM USER WHERE ID = "+strID)
                 for row in cursor:
                     name = row[0]
                     status = row[1]
                 #await channel.send (embed = buildEmbed(prAuthor='Shadow Bot IV', prFooter=strID,prTitle=name, prDesc=status, prThumbnail=author.avatar_url))
-                await channel.send (embed = buildProfile(prEmbed(prID = strID, prAuthor='Shadow Bot IV', prFooter=strID, prTitle=name, prDesc=status, prThumbnail=author.avatar_url)))
+                await channel.send (embed = buildProfile(prEmbed(prID = strID, prAuthor='Shadow Bot IV', prFooter=strID, prTitle=name, prDesc=status, prThumbnail=author.avatar_url)))'''
             
             global state
             global new
