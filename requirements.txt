@@ -1,2 +1,3 @@
 discord-components==2.1.2
 git+https://github.com/Rapptz/discord.py.git
+psycopg2==2.9.3
