@@ -2,7 +2,7 @@ import psycopg2,os
 from dotenv import load_dotenv
 
 def createConn():
-    load_dotenv()
+    #load_dotenv()
     DATABASE_URL = os.environ.get('DATABASE_URL')
     con = psycopg2.connect(DATABASE_URL)
     return con

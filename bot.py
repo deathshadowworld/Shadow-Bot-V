@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 intents = discord.Intents(messages=True, guilds=True, members=True, voice_states=True)
 client = discord.Client(intents=intents)
-load_dotenv()
+#load_dotenv()
 owner = 259999538666930177
 
 
