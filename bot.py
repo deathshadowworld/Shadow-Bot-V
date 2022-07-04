@@ -20,6 +20,7 @@ class Bot(commands.Bot):
         super().__init__(command_prefix=commands.when_mentioned_or('sk'), intents=intents)
 
     async def on_ready(self):
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Shadow dying"))
         print(f'Logged in as {self.user} (ID: {self.user.id})')
         print('------')
 bot = Bot()
@@ -130,6 +131,6 @@ async def on_voice_state_update(member, before, after):
     if before.channel == None:
         await member.add_roles(vc_role)
 
-token = os.environ.get('V')
+token = str(os.environ.get('V'))
 print(token)
-bot.run('OTkyNzc1OTQxMzA4ODI5Njk2.GqIRpV.OdNYMoMTMdKCPH6kI74hVOsItDkSutcL1q0kQ0')
+bot.run(token)
