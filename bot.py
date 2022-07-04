@@ -132,4 +132,4 @@ async def on_voice_state_update(member, before, after):
 
 token = os.environ.get('V')
 print(token)
-bot.run(token)
+bot.run('OTkyNzc1OTQxMzA4ODI5Njk2.GqIRpV.OdNYMoMTMdKCPH6kI74hVOsItDkSutcL1q0kQ0')
