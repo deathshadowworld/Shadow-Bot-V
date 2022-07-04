@@ -129,5 +129,7 @@ async def on_voice_state_update(member, before, after):
 
     if before.channel == None:
         await member.add_roles(vc_role)
-    
-bot.run(os.environ.get('V'))
+
+token = os.environ.get('V')
+print(token)
+bot.run(token)
