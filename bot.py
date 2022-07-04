@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.ext.commands import Context
 from discord import Interaction,Button
 from discord.utils import get
-import os,psycopg2, postg
+import os, postg
 from dotenv import load_dotenv
 
 intents = discord.Intents(messages=True, guilds=True, members=True, voice_states=True)

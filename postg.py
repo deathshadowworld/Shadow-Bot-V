@@ -1,4 +1,3 @@
-from venv import create
 import psycopg2,os
 from dotenv import load_dotenv
 
