@@ -1,4 +1,4 @@
-import discord, os, postg, embd,tabulate
+import discord, os, postg, embd
 from discord.ext import commands
 from discord.ext.commands import Context
 from discord import Interaction,Button

@@ -1,4 +1,3 @@
-from collections import UserList
 from discord import Embed
 import postg
 import datetime
