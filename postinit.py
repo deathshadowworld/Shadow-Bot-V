@@ -9,27 +9,40 @@ def run():
 
     cur.execute('''CREATE TABLE PLAYER(
         ID          INT             NOT NULL,
+        NAME        VARCHAR,
+        STATUS      VARCHAR,
         PRIMARY KEY (ID)
     );
     ''')
     cur.execute('''CREATE TABLE CHARACTER(
-        ID          INT             NOT NULL,
-        NAME        CHAR(32)        NOT NULL,
-        CLASS       CHAR(16)        NOT NULL,
-        LEVEL       INT             NOT NULL,
-        EXP         INT             NOT NULL,
-        VITALITY    INT             NOT NULL,
-        VIGOR       INT             NOT NULL,
-        AGILITY     INT             NOT NULL,
-        ERUDITION   INT             NOT NULL,
-        JUDGMENT    INT             NOT NULL,
-        CHARM       INT             NOT NULL,
-        PLAYERID    INT             NOT NULL,
-        IMAGE       TEXT,
+    0   ID          INT             NOT NULL,
+    1   NAME        VARCAR          NOT NULL,
+    2   CLASS       VARCHAR         NOT NULL,
+    3   LEVEL       INT             NOT NULL,
+    4   EXP         INT             NOT NULL,
+    5   VITALITY    INT             NOT NULL,
+    6   STRENGTH    INT             NOT NULL,
+    7   AGILITY     INT             NOT NULL,
+    8   INTELLECT   INT             NOT NULL,
+    9   WISDOM      INT             NOT NULL,
+    10  CHARM       INT             NOT NULL,
+    11  PLAYERID    INT             NOT NULL,
+    12  IMAGE       TEXT,
+    13  COINS       INT,
+    14  BACKSTORY   VARCHAR,
         PRIMARY KEY (ID),
         FOREIGN KEY (PLAYERID) REFERENCES PLAYER(ID)
         );
     ''')
+
+    '''
+    vit cross in heart red
+    vig bicep orange
+    agi run green
+    eru book blue
+    jud mind awareness yellow
+    cha mini hearts purple
+    '''
     cur.execute('''CREATE TABLE INVENTORY(
         ID          INT             NOT NULL,
         NAME        CHAR(64)        NOT NULL,
