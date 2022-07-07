@@ -1,9 +1,10 @@
-import discord, os, postg, embd
+import discord, os, postg, embd,quizzes
 from discord.ext import commands
 from discord.ext.commands import Context
 from discord import Interaction,Button
 from discord.utils import get
 from dotenv import load_dotenv
+import random
 
 intents = discord.Intents(messages=True, guilds=True, members=True, voice_states=True)
 client = discord.Client(intents=intents)
@@ -138,6 +139,36 @@ async def deleteChar(ctx:Context):
          await main.edit(content='Command aborted.', view=None)
     return view
 
+@bot.command()
+async def vocabulary(ctx:Context):
+    module = []
+    module.append({
+        'question':'Which word is the similar to `hot`? \nA. Heat \nB. Cold \nC. Bot \nD. Fire',
+        'answer':'A',
+    })
+    module.append({
+        'question':'Which word is the similar to `big`? \nA. Minuscule \nB. Enormous \nC. Empowered \nD. Voluptuous',
+        'answer':'B',
+    })
+    module.append({
+        'question':'Which word is the similar to `cold`? \nA. Sunny \nB. Wind \nC. Freezing \nD. Shaking',
+        'answer':'C',
+    })
+    module.append({
+        'question':'Her stature is \_\_\_\_\_\_\_\_. \nA. Slim \nB. Lanky \nC. Obese \nD. Fast',
+        'answer':'B',
+    })
+
+    view = quizzes.multipleChoice(ctx=ctx,module=random.choice(module))
+    main = await ctx.send(view.question,view=view)
+    await view.wait()
+    if view.value == view.answer:
+        await main.edit(content=view.question, view=None)
+        await ctx.send ('Correct! The answer is `'+view.value+'`!')
+    else:
+        await main.edit(content=view.question, view=None)
+        await ctx.send ('Incorrect. The answer is `'+view.answer+'`.')
+
 class charDeletion(discord.ui.View):
     def __init__(self,ctx):
         super().__init__()
@@ -174,15 +205,12 @@ async def hello(ctx: Context):
 async def on_message(message):
     user = message.author
     
-
     if user == bot.user:
         return
 
     if user.id == owner:
         if message.content == 'hello':
             await message.channel.send('Hello Shadow!')
-    
-
     
     if message.content.startswith('sk '):
         content = message.content.replace('sk ','')
@@ -239,6 +267,7 @@ async def on_message(message):
 
 
     await bot.process_commands(message)
+
 
 
 @bot.event
