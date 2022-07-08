@@ -44,3 +44,51 @@ class multipleChoice(discord.ui.View):
             self.stop()
         else:
             await interact.response.send_message("You're not the expected user.", ephemeral=True)
+
+def getVocabEasy():
+    module = []  
+    module.append({
+        'question':'Which word is similar to `hot`? \nA. Heat \nB. Cold \nC. Bot \nD. Fire',
+        'answer':'A',
+    })
+    module.append({
+        'question':'Which word is similar to `big`? \nA. Small \nB. Huge \nC. Tiny \nD. Amazing',
+        'answer':'B',
+    })
+    module.append({
+        'question':'Which word is similar to `cold`? \nA. Sunny \nB. WindY \nC. Freezing \nD. Raining',
+        'answer':'C',
+    })
+    
+    
+    
+    module.append({
+        'question':'Her stature is \_\_\_\_\_\_\_\_. \nA. Slim \nB. Lanky \nC. Obese \nD. Fast',
+        'answer':'B',
+    })
+    module.append({
+        'question':'His car is \_\_\_\_\_\_\_\_. \nA. Wings \nB. Lanky \nC. Under \nD. Fast',
+        'answer':'D',
+    })
+
+    return module
+
+    module.append({
+        'question':'Which word is similar to ``? \nA.  \nB.  \nC.  \nD. ',
+        'answer':'',
+    })
+    module.append({
+        'question':'\_\_\_\_\_. \nA.  \nB.  \nC.  \nD. ',
+        'answer':'',
+    })
+    module.append({
+        'question':' \nA.  \nB.  \nC.  \nD. ',
+        'answer':'',
+    })
+
+def getVocabMed():
+    module = []
+    module.append({
+        'question':'Which word is similar to `huge`? \nA. Minuscule \nB. Enormous \nC. Empowered \nD. Voluptuous',
+        'answer':'B',
+    })

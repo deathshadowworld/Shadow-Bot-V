@@ -101,7 +101,6 @@ async def testbutton(ctx:Context):
     view = thisButton(ctx)
     await ctx.send('Pick a number.', view=view)
     
-@bot.command()
 async def createChar(ctx:Context):
     view = charCreation(ctx)
     main = await ctx.send('Pick your class.', view=view)
@@ -139,26 +138,29 @@ async def deleteChar(ctx:Context):
          await main.edit(content='Command aborted.', view=None)
     return view
 
+@bot.command(name='ping')
+async def gameRole(ctx:Context, arg):
+    GUILD_ID = 784859857937236059
+    guild = bot.get_guild(GUILD_ID)
+    ROLES = {
+        'among us':994957809051516969,
+        'fall guys':994957622874738850,
+        'apex legends':994957847974649916,
+        'minecraft':994957974726529024,
+    }
+    if arg in ROLES:
+        role = get(guild.roles,id=ROLES[arg])
+        if  role in ctx.author.roles:
+            await ctx.author.add_roles(role)
+        else:
+            await ctx.author.remove_roles(role)
+    else:
+        ctx.send('Role not found.')
+
+
 @bot.command()
 async def vocabulary(ctx:Context):
-    module = []
-    module.append({
-        'question':'Which word is the similar to `hot`? \nA. Heat \nB. Cold \nC. Bot \nD. Fire',
-        'answer':'A',
-    })
-    module.append({
-        'question':'Which word is the similar to `big`? \nA. Minuscule \nB. Enormous \nC. Empowered \nD. Voluptuous',
-        'answer':'B',
-    })
-    module.append({
-        'question':'Which word is the similar to `cold`? \nA. Sunny \nB. Wind \nC. Freezing \nD. Shaking',
-        'answer':'C',
-    })
-    module.append({
-        'question':'Her stature is \_\_\_\_\_\_\_\_. \nA. Slim \nB. Lanky \nC. Obese \nD. Fast',
-        'answer':'B',
-    })
-
+    module = quizzes.getVocab()
     view = quizzes.multipleChoice(ctx=ctx,module=random.choice(module))
     main = await ctx.send(view.question,view=view)
     await view.wait()
@@ -267,8 +269,6 @@ async def on_message(message):
 
 
     await bot.process_commands(message)
-
-
 
 @bot.event
 async def on_voice_state_update(member, before, after):
