@@ -148,8 +148,6 @@ async def gameRole(ctx:Context, arg):
         'apexlegends':994957847974649916,
         'minecraft':994957974726529024,
     }
-    await ctx.send(arg)
-    await ctx.send(str(ROLES[arg]))
     if arg in ROLES:
         role = get(guild.roles,id=ROLES[arg])
 
