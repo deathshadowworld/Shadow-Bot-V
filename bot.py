@@ -152,15 +152,17 @@ async def gameRole(ctx:Context, arg):
         role = get(guild.roles,id=ROLES[arg])
         if  role in ctx.author.roles:
             await ctx.author.add_roles(role)
+            await ctx.send('Role added.')
         else:
             await ctx.author.remove_roles(role)
+            await ctx.send('Role removed.')
     else:
-        ctx.send('Role not found.')
+        await ctx.send('Role not found.')
 
 
 @bot.command()
 async def vocabulary(ctx:Context):
-    module = quizzes.getVocab()
+    module = quizzes.getVocabEasy()
     view = quizzes.multipleChoice(ctx=ctx,module=random.choice(module))
     main = await ctx.send(view.question,view=view)
     await view.wait()
