@@ -139,17 +139,18 @@ async def deleteChar(ctx:Context):
     return view
 
 @bot.command(name='ping')
-async def gameRole(ctx:Context, arg):
+async def gameRole(ctx:Context, *, args):
     GUILD_ID = 784859857937236059
     guild = bot.get_guild(GUILD_ID)
     ROLES = {
-        'amongus':994957809051516969,
-        'fallguys':994957622874738850,
-        'apexlegends':994957847974649916,
+        'among us':994957809051516969,
+        'fall guys':994957622874738850,
+        'apex legends':994957847974649916,
         'minecraft':994957974726529024,
     }
-    if arg in ROLES:
-        role = get(guild.roles,id=ROLES[arg])
+    print(args)
+    if args in ROLES:
+        role = get(guild.roles,id=ROLES[args])
 
         if role in ctx.author.roles:
             await ctx.author.remove_roles(role)
