@@ -152,12 +152,13 @@ async def gameRole(ctx:Context, arg):
     await ctx.send(str(ROLES[arg]))
     if arg in ROLES:
         role = get(guild.roles,id=ROLES[arg])
-        if  role in ctx.author.roles:
-            await ctx.author.add_roles(role)
-            await ctx.send('Role added.')
-        else:
+
+        if role in ctx.author.roles:
             await ctx.author.remove_roles(role)
             await ctx.send('Role removed.')
+        else:
+            await ctx.author.add_roles(role)
+            await ctx.send('Role added.')
     else:
         await ctx.send('Role not found.')
 
