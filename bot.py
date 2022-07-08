@@ -143,11 +143,13 @@ async def gameRole(ctx:Context, arg):
     GUILD_ID = 784859857937236059
     guild = bot.get_guild(GUILD_ID)
     ROLES = {
-        'among us':994957809051516969,
-        'fall guys':994957622874738850,
-        'apex legends':994957847974649916,
+        'amongus':994957809051516969,
+        'fallguys':994957622874738850,
+        'apexlegends':994957847974649916,
         'minecraft':994957974726529024,
     }
+    await ctx.send(arg)
+    await ctx.send(str(ROLES[arg]))
     if arg in ROLES:
         role = get(guild.roles,id=ROLES[arg])
         if  role in ctx.author.roles:
