@@ -1,21 +1,23 @@
-import discord, os, postg, embd,quizzes
+import discord, os, postg, embd,quizzes,random,tol
 from discord.ext import commands
 from discord.ext.commands import Context
 from discord import Interaction,Button
 from discord.utils import get
 from dotenv import load_dotenv
-import random
+owner = 259999538666930177
+
 
 intents = discord.Intents(messages=True, guilds=True, members=True, voice_states=True)
 client = discord.Client(intents=intents)
 load_dotenv()
-owner = 259999538666930177
-
 
 class Bot(commands.Bot):
     def __init__(self):
         intents = discord.Intents.default()
         intents.message_content = True
+        intents.members = True
+        intents.guilds = True
+        intents.voice_states = True
 
         super().__init__(command_prefix=commands.when_mentioned_or('$'), intents=intents)
 
@@ -161,6 +163,37 @@ async def gameRole(ctx:Context, *, args):
     else:
         await ctx.send('Role not found.')
 
+@bot.command(name='approve')
+async def approvedRole(ctx:Context, *, args):
+    admins = [
+        259999538666930177,
+        367302898528288778,
+        232015130571964419,
+    ]
+    if(ctx.author.id in admins):
+        GUILD_ID = 1004264878615298088
+        guild = bot.get_guild(GUILD_ID)
+        a = args.replace("<@","")
+        mention = int(a.replace(">",""))
+        #user = get(guild.members, id=mention)
+        user = get(guild.members, id=mention)
+        if user:
+            role = get(guild.roles,id=1004266599412416592)
+            await user.add_roles(role)
+            await ctx.send('Player approved.')
+        else:
+            await ctx.send('Player not found.')
+    else:
+        await ctx.send('Not authorized.')
+
+@bot.command(name='verify')
+async def verifiedRole(ctx:Context):
+    GUILD_ID = 1004264878615298088
+    guild = bot.get_guild(GUILD_ID)
+    role = get(guild.roles,id=1004289670215127060)
+    await ctx.author.add_roles(role)
+    await ctx.message.delete()
+
 
 @bot.command()
 async def vocabulary(ctx:Context):
@@ -267,6 +300,9 @@ async def on_message(message):
                     await message.channel.send('Portrait updated!')
                 else:
                     await message.channel.send('Something went wrong.')
+        if content == 'play':
+            ctx = await bot.get_context(message)
+            await tol.startGame(ctx)
 
 
 
