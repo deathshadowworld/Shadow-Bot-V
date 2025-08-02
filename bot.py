@@ -1,239 +1,69 @@
-import discord, os, postg, embd,quizzes,random,tol
+import discord, os
 from discord.ext import commands
 from discord.ext.commands import Context
-from discord import Interaction,Button
+from controller.UserController import User
+from controller.MessageController import Message
+from db.db import getToken, migrate
 from discord.utils import get
-from dotenv import load_dotenv
+
 owner = 259999538666930177
 
+intents = discord.Intents.default()
+intents.message_content = True
+intents.members = True
+intents.guilds = True
+intents.voice_states = True
 
-intents = discord.Intents(messages=True, guilds=True, members=True, voice_states=True)
-client = discord.Client(intents=intents)
-load_dotenv()
+bot = commands.Bot(command_prefix="sk ", intents=intents)
 
-class Bot(commands.Bot):
-    def __init__(self):
-        intents = discord.Intents.default()
-        intents.message_content = True
-        intents.members = True
-        intents.guilds = True
-        intents.voice_states = True
+adminList = [
+    259999538666930177,
+    400781611588911116
+]
 
-        super().__init__(command_prefix=commands.when_mentioned_or('$'), intents=intents)
+@bot.event
+async def on_ready():
+    print(f'We have logged in as {bot.user}')
+    await bot.tree.sync()
+    print("Slash commands synced.")
 
-    async def on_ready(self):
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="shadow dying"))
-        print(f'Logged in as {self.user} (ID: {self.user.id})')
-        print('------')
-bot = Bot()
+# @bot.command(name='ping')
+# async def gameRole(ctx:Context, *, args):
+#     GUILD_ID = 784859857937236059
+#     guild = bot.get_guild(GUILD_ID)
+#     ROLES = {
+#         'among us':994957809051516969,
+#         'fall guys':994957622874738850,
+#         'apex legends':994957847974649916,
+#         'minecraft':994957974726529024,
+#     }
+#     print(args)
+#     if args in ROLES:
+#         role = get(guild.roles,id=ROLES[args])
 
+#         if role in ctx.author.roles:
+#             await ctx.author.remove_roles(role)
+#             await ctx.send('Role removed.')
+#         else:
+#             await ctx.author.add_roles(role)
+#             await ctx.send('Role added.')
+#     else:
+#         await ctx.send('Role not found.')
 
-class thisButton(discord.ui.View):
-    def __init__(self,ctx):
-        super().__init__()
-        self.uid = ctx.author.id
-        self.channel = ctx.channel
-        self.value = None
-
-    @discord.ui.button(label='1')
-    async def one(self, interact: Interaction,button: Button):
-        if self.uid == interact.user.id:
-            await interact.response.send_message('1')
-            self.stop()
-        else:
-            await interact.response.send_message("You're not the expected user.", ephemeral=True)
-
-    @discord.ui.button(label='2')
-    async def two(self, interact: Interaction,button: Button):
-        if self.uid == interact.user.id:
-            await interact.response.send_message('2')
-            self.stop()
-        else:
-            await interact.response.send_message("You're not the expected user.", ephemeral=True)
-
-class charCreation(discord.ui.View):
-    def __init__(self,ctx):
-        super().__init__()
-        self.uid = ctx.author.id
-        self.channel = ctx.channel
-        self.chosen = '0'
-        self.name = ''
-        self.value = None
-
-    @discord.ui.button(label='Warrior')
-    async def warrior(self, interact: Interaction,button: Button):
-        if self.uid == interact.user.id:
-            self.chosen = 'Warrior'
-            #await interact.response.send_message('Warrior')
-            self.stop()
-        else:
-            await interact.response.send_message("You're not the expected user.", ephemeral=True)
-
-    @discord.ui.button(label='Archer')
-    async def archer(self, interact: Interaction,button: Button):
-        if self.uid == interact.user.id:
-            self.chosen = 'Archer'
-            #await interact.response.send_message('Archer')
-            self.stop()
-        else:
-            await interact.response.send_message("You're not the expected user.", ephemeral=True)
-
-    @discord.ui.button(label='Caster')
-    async def caster(self, interact: Interaction,button: Button):
-        if self.uid == interact.user.id:
-            self.chosen = 'Caster'
-            #await interact.response.send_message('Caster')
-            self.stop()
-        else:
-            await interact.response.send_message("You're not the expected user.", ephemeral=True)
-
-    @discord.ui.button(label='Healer')
-    async def healer(self, interact: Interaction,button: Button):
-        if self.uid == interact.user.id:
-            self.chosen = 'Healer'
-            #await interact.response.send_message('Healer')
-            self.stop()
-        else:
-            await interact.response.send_message("You're not the expected user.", ephemeral=True)
-    
-
-
-@bot.command()
-async def testbutton(ctx:Context):
-    view = thisButton(ctx)
-    await ctx.send('Pick a number.', view=view)
-    
-async def createChar(ctx:Context):
-    view = charCreation(ctx)
-    main = await ctx.send('Pick your class.', view=view)
-    desc = await ctx.send('''```css
-[1]   Warrior - Adept in hand-to-hand combat
-[2]   Archer  - Adept in ranged attacks
-[3]   Caster  - Adept in damaging spells
-[4]   Healer  - Adept in healing and support spells```''')
-    await view.wait()
-    await desc.delete()
-    await main.edit(content='What is your name?', view=None)
-    def check(msg):
-        return msg.author.id == view.uid and msg.channel == view.channel
-    msg = await bot.wait_for('message', check=check)
-    view.name = msg.content
-    regChar = postg.registerChar(view)
-    if regChar == None:
-        await ctx.send('User already has a character.')
-    elif regChar:
-        await ctx.send('Your character of `'+view.name+'` has been created!')
-    else: 
-        await ctx.send('User is not registered. `sk register`')
-    return view
-
-async def deleteChar(ctx:Context):
-    view = charDeletion(ctx)
-    main = await ctx.send('Do you want to delete your character? (This will reset everything and irreversible.)', view=view)
-    await view.wait()
-    if view.chosen == 'yes':
-        if postg.deleteChar(ctx.author):
-            await main.edit(content='Character deleted.', view=None)
-        else:
-            await main.edit(content="You don't have any character.", view=None)
-    if view.chosen == 'no':
-         await main.edit(content='Command aborted.', view=None)
-    return view
-
-@bot.command(name='ping')
-async def gameRole(ctx:Context, *, args):
-    GUILD_ID = 784859857937236059
-    guild = bot.get_guild(GUILD_ID)
-    ROLES = {
-        'among us':994957809051516969,
-        'fall guys':994957622874738850,
-        'apex legends':994957847974649916,
-        'minecraft':994957974726529024,
-    }
-    print(args)
-    if args in ROLES:
-        role = get(guild.roles,id=ROLES[args])
-
-        if role in ctx.author.roles:
-            await ctx.author.remove_roles(role)
-            await ctx.send('Role removed.')
-        else:
-            await ctx.author.add_roles(role)
-            await ctx.send('Role added.')
+@bot.hybrid_command(name="register")
+async def registerUser(ctx):
+    if not User.checkExist(ctx.author.id):
+        await ctx.send("What would you like to be called?")
+        def check(msg):
+            return msg.author.id == ctx.author.id and msg.channel == ctx.channel
+        msg = await bot.wait_for('message', check=check)
+        user = User(user_id=msg.author.id, nickname=msg.content)
+        User.create(user)
+        print('User '+ user.nickname +' | '+ str(user.user_id) +' is created successfully.')
+        await ctx.send("User %s is registered~" % user.nickname)
     else:
-        await ctx.send('Role not found.')
+        await ctx.send("User is already registered.")
 
-@bot.command(name='approve')
-async def approvedRole(ctx:Context, *, args):
-    admins = [
-        259999538666930177,
-        367302898528288778,
-        232015130571964419,
-    ]
-    if(ctx.author.id in admins):
-        GUILD_ID = 1004264878615298088
-        guild = bot.get_guild(GUILD_ID)
-        a = args.replace("<@","")
-        mention = int(a.replace(">",""))
-        #user = get(guild.members, id=mention)
-        user = get(guild.members, id=mention)
-        if user:
-            role = get(guild.roles,id=1004266599412416592)
-            await user.add_roles(role)
-            await ctx.send('Player approved.')
-        else:
-            await ctx.send('Player not found.')
-    else:
-        await ctx.send('Not authorized.')
-
-@bot.command(name='verify')
-async def verifiedRole(ctx:Context):
-    GUILD_ID = 1004264878615298088
-    guild = bot.get_guild(GUILD_ID)
-    role = get(guild.roles,id=1004289670215127060)
-    await ctx.author.add_roles(role)
-    await ctx.message.delete()
-
-
-@bot.command()
-async def vocabulary(ctx:Context):
-    module = quizzes.getVocabEasy()
-    view = quizzes.multipleChoice(ctx=ctx,module=random.choice(module))
-    main = await ctx.send(view.question,view=view)
-    await view.wait()
-    if view.value == view.answer:
-        await main.edit(content=view.question, view=None)
-        await ctx.send ('Correct! The answer is `'+view.value+'`!')
-    else:
-        await main.edit(content=view.question, view=None)
-        await ctx.send ('Incorrect. The answer is `'+view.answer+'`.')
-
-class charDeletion(discord.ui.View):
-    def __init__(self,ctx):
-        super().__init__()
-        self.uid = ctx.author.id
-        self.channel = ctx.channel
-        self.chosen = '0'
-        self.name = ''
-        self.value = None
-
-    @discord.ui.button(label='Yes')
-    async def yes(self, interact: Interaction,button: Button):
-        if self.uid == interact.user.id:
-            self.chosen = 'yes'
-            #await interact.response.send_message('Warrior')
-            self.stop()
-        else:
-            await interact.response.send_message("You're not the expected user.", ephemeral=True)
-
-    @discord.ui.button(label='No')
-    async def no(self, interact: Interaction,button: Button):
-        if self.uid == interact.user.id:
-            self.chosen = 'no'
-            #await interact.response.send_message('Warrior')
-            self.stop()
-        else:
-            await interact.response.send_message("You're not the expected user.", ephemeral=True)
 
 @bot.command()
 async def hello(ctx: Context):
@@ -250,71 +80,12 @@ async def on_message(message):
     if user.id == owner:
         if message.content == 'hello':
             await message.channel.send('Hello Shadow!')
-    
-    if message.content.startswith('sk '):
-        content = message.content.replace('sk ','')
-        if user.id == owner:
-            if content == "fix":
-                postg.fix()
-                await message.channel.send("Command executed.")
-            if content == "reset":
-                postg.resetAll()
-                await message.channel.send("Database reset.")
-            if content == "view all":
-                player = embd.viewPlayers(user)
-                chars = embd.viewChars(user)
-                if not (player and chars):
-                    await message.channel.send("One or all database empty.")
-                else:
-                    await message.channel.send("```css\n"+player+"```")
-                    await message.channel.send("```css\n"+chars+"```")
-        if content == "register":
-            if postg.registerUser(user):
-                await message.channel.send('User successfully registered!')
-            else:
-                await message.channel.send('User already registered!')
-        if content == "view profile":
-            embed = embd.viewProfile(user)
-            if embed:
-                #await message.channel.send('You are <@'+profile['id']+'>, name of '+profile['name']+' with status of '+profile['status'])
-                await message.channel.send(embed=embed)
-            else:
-                await message.channel.send('Profile not found. Please register using `sk register`.')
-
-        if content == 'create':
-            ctx = await bot.get_context(message)
-            info = await createChar(ctx)
-        if content == 'delete':
-            ctx = await bot.get_context(message)
-            await deleteChar(ctx)
-        if content == 'help':
-            await message.channel.send(embed=embd.viewHelp())
-        if content.startswith('portrait '):
-            content = content.replace('portrait ','')
-            if content.startswith('update '):
-                content = content.replace('update ','')
-                img = postg.updateImg(content,user)
-                if img == None:
-                    await message.channel.send('Database not found.')
-                if img:
-                    await message.channel.send('Portrait updated!')
-                else:
-                    await message.channel.send('Something went wrong.')
-        if content == 'play':
-            ctx = await bot.get_context(message)
-            await tol.startGame(ctx)
-
-
-
-
-
     await bot.process_commands(message)
 
 @bot.event
 async def on_voice_state_update(member, before, after):
     VCROLE = 992826737362739282
     GUILD_ID = 784859857937236059
-    #vcr,guid = 993370884683333782,718068370070568990
 
     guild = bot.get_guild(GUILD_ID)
     vc_role = get(guild.roles, id=VCROLE)
@@ -326,4 +97,50 @@ async def on_voice_state_update(member, before, after):
         await member.add_roles(vc_role)
 
 
-bot.run(str(os.environ.get('BOT_TOKEN')))
+@bot.hybrid_command(name="queue")
+async def messageQueue (ctx, question):
+    if ctx.author.id in adminList:
+        msg = Message.queue(question)
+        if msg:
+            await ctx.send("Message is queued.\n"+msg)
+        else:
+            await ctx.send("Message failed to queue.")
+    else:
+        await ctx.send("No privilege.")
+        
+@bot.hybrid_command(name="view")
+async def messageView (ctx):
+    if ctx.author.id in adminList:
+        await ctx.send(Message.view())
+    else:
+        await ctx.send("No privilege.")
+        
+@bot.hybrid_command(name="pop")
+async def messagePop (ctx):
+    if ctx.author.id in adminList:
+        await ctx.send(Message.pop())
+    else:
+        await ctx.send("No privilege.")
+        
+@bot.hybrid_command(name="resetall")
+async def messageResetAll (ctx):
+    if ctx.author.id in adminList:
+        if Message.resetAll():
+            await ctx.send("Message stack is reset.")
+        else:
+            await ctx.send("Message stack failed to reset.")
+    else:
+        await ctx.send("No privilege.")
+
+@bot.hybrid_command(name="admin")
+async def adminCommands(ctx, command):
+    if ctx.author.id in adminList:
+        if command == "migrate":
+            await ctx.send("Resetting database...")
+            await ctx.send("Migrating...")
+            migrate()
+            await ctx.send("Migration finished")
+    else:
+        await ctx.send("No privilege.")
+
+bot.run(getToken())
