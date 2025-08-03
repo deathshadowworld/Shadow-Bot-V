@@ -69,7 +69,7 @@ async def registerUser(ctx):
 @bot.command()
 async def hello(ctx: Context):
     if ctx.author.id == owner:
-        await ctx.send('Hello Shadow master!')
+        await ctx.send('Hello Shadow master!', ephemeral=True)
 
 @bot.event
 async def on_message(message):
@@ -107,21 +107,21 @@ async def messageQueue (ctx, question):
         else:
             await ctx.send("Message failed to queue.")
     else:
-        await ctx.send("No privilege.")
+        await ctx.send("No privilege.", ephemeral=True)
         
 @bot.hybrid_command(name="view")
 async def messageView (ctx):
     if ctx.author.id in adminList:
         await ctx.send(Message.view())
     else:
-        await ctx.send("No privilege.")
+        await ctx.send("No privilege.", ephemeral=True)
         
 @bot.hybrid_command(name="pop")
 async def messagePop (ctx):
     if ctx.author.id in adminList:
         await ctx.send("Question of the Day!\n\n"+ Message.pop())
     else:
-        await ctx.send("No privilege.")
+        await ctx.send("No privilege.", ephemeral=True)
         
 @bot.hybrid_command(name="resetall")
 async def messageResetAll (ctx):
@@ -131,7 +131,7 @@ async def messageResetAll (ctx):
         else:
             await ctx.send("Message stack failed to reset.")
     else:
-        await ctx.send("No privilege.")
+        await ctx.send("No privilege.", ephemeral=True)
 
 @bot.hybrid_command(name="admin")
 async def adminCommands(ctx, command):
@@ -142,6 +142,6 @@ async def adminCommands(ctx, command):
             migrate()
             await ctx.send("Migration finished")
     else:
-        await ctx.send("No privilege.")
+        await ctx.send("No privilege.", ephemeral=True)
 
 bot.run(getToken())
