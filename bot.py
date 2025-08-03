@@ -119,7 +119,7 @@ async def messageView (ctx):
 @bot.hybrid_command(name="pop")
 async def messagePop (ctx):
     if ctx.author.id in adminList:
-        await ctx.send(Message.pop())
+        await ctx.send("Question of the Day!\n\n"+ Message.pop())
     else:
         await ctx.send("No privilege.")
         
