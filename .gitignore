@@ -1,2 +1,5 @@
-/.env
-/testp.py
+.env
+testp.py
+venv/
+.venv/
+old/

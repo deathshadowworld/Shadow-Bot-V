@@ -23,6 +23,7 @@ adminList = [
 
 @bot.event
 async def on_ready():
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="shadow dying"))
     print(f'We have logged in as {bot.user}')
     await bot.tree.sync()
     print("Slash commands synced.")
