@@ -34,7 +34,7 @@ class Message :
         results = []
         string = ""
         for x in rows:
-            string += " (`" + ('AWAIT' if x[2] == 1 else 'DONE' ) + "`) " + x[1] +"\n"
+            string += "`" + x[0] + "` `" + ('AWAIT' if x[2] == 1 else 'DONE' ) + "` | " + x[1] +"\n"
         if string:
             return string
         else:
