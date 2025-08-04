@@ -27,7 +27,7 @@ class Message :
     def view():
         conn = get_conn()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM messages LIMIT 20")
+        cursor.execute("SELECT * FROM messages")
         rows = cursor.fetchall()
         cursor.close()
         conn.close()
