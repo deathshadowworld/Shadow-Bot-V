@@ -34,7 +34,7 @@ class Message :
         results = []
         string = ""
         for x in rows:
-            string += "`" + x[0] + "` `" + ('AWAIT' if x[2] == 1 else 'DONE' ) + "` | " + x[1] +"\n"
+            string += "`" + str(x[0]) + "` " + (':pause_button: ' if x[2] == 1 else ':white_check_mark: ' ) + " " + x[1] +"\n"
         if string:
             return string
         else:
@@ -61,6 +61,20 @@ class Message :
         conn = get_conn()
         cursor = conn.cursor()
         cursor.execute("UPDATE messages SET status = 1", ())
+        conn.commit()
+        row = cursor.rowcount
+        cursor.close()
+        conn.close()
+        if row > 0:
+            return True
+        else:
+            return False
+    
+    @staticmethod
+    def reset(id):
+        conn = get_conn()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE messages SET status = 1 WHERE id = %s", (id,))
         conn.commit()
         row = cursor.rowcount
         cursor.close()

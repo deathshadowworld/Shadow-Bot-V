@@ -132,6 +132,16 @@ async def messageResetAll (ctx):
             await ctx.send("Message stack failed to reset.")
     else:
         await ctx.send("No privilege.", ephemeral=True)
+        
+@bot.hybrid_command(name="reset")
+async def messageResetAll (ctx,id):
+    if ctx.author.id in adminList:
+        if Message.reset(id):
+            await ctx.send("Message `" + str(id) + "` is reset")
+        else:
+            await ctx.send("Message `" + str(id) + "` failed to reset.")
+    else:
+        await ctx.send("No privilege.", ephemeral=True)
 
 @bot.hybrid_command(name="admin")
 async def adminCommands(ctx, command):
