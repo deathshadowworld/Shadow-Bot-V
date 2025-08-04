@@ -36,6 +36,7 @@ class Message :
         i = 0
         for x in rows:
             string += "`" + str(x[0]) + "` " + (':pause_button: ' if x[2] == 1 else ':white_check_mark: ' ) + " " + x[1] +"\n"
+            print ("`" + str(x[0]) + "` " + (':pause_button: ' if x[2] == 1 else ':white_check_mark: ' ) + " " + x[1] +"\n")
             i += 1
             if i == 10:
                 results.append(string)
