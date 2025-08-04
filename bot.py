@@ -112,7 +112,9 @@ async def messageQueue (ctx, question):
 @bot.hybrid_command(name="view")
 async def messageView (ctx):
     if ctx.author.id in adminList:
-        await ctx.send(Message.view())
+        result = Message.view()
+        for x in result:
+            await ctx.send(x)
     else:
         await ctx.send("No privilege.", ephemeral=True)
         

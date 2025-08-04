@@ -33,12 +33,21 @@ class Message :
         conn.close()
         results = []
         string = ""
+        i = 0
         for x in rows:
             string += "`" + str(x[0]) + "` " + (':pause_button: ' if x[2] == 1 else ':white_check_mark: ' ) + " " + x[1] +"\n"
-        if string:
-            return string
+            i += 1
+            if i == 10:
+                results.append(string)
+                string = ""
+                i = 0
+        if string != "":
+            results.append(string)
+            
+        if results:
+            return results
         else:
-            return 'No message in database'
+            return ['No message in database']
 
     @staticmethod
     def pop():
